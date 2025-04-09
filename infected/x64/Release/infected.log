@@ -1,0 +1,11 @@
+﻿  infected.cpp
+  pers.cpp
+C:\Users\thanh\source\repos\infected\pers.cpp(10,89): warning C4267: 'argument': conversion from 'size_t' to 'DWORD', possible loss of data
+  utils.cpp
+C:\Users\thanh\source\repos\infected\utils.cpp(136,54): warning C4267: 'argument': conversion from 'size_t' to 'DWORD', possible loss of data
+  Generating code
+  Compiler switch has changed, fall back to full compilation.
+C:\Users\thanh\source\repos\infected\utils.cpp(96): warning C4172: returning address of local variable or temporary : randomName
+  All 122 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  infected.vcxproj -> C:\Users\thanh\source\repos\infected\x64\Release\infected.exe
